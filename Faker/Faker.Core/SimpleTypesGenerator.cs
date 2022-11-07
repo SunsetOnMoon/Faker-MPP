@@ -1,15 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data.SqlTypes;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Runtime.Intrinsics.X86;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Faker.Faker.Core
+﻿namespace Faker.Faker.Core
 {
     public class IntGenerator : Generator<int>
     {
