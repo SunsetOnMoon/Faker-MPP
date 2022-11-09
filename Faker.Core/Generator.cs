@@ -1,4 +1,4 @@
-﻿namespace Faker.Faker.Core
+﻿namespace Faker.Core
 {
     public abstract class Generator<T> : IValueGenerator
     {
