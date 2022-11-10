@@ -8,19 +8,19 @@ using System.Threading.Tasks;
 
 namespace Faker.Core
 {
-    public class Faker : IFaker
+    public class FakerService : IFaker
     {
         private Dictionary<Type, IValueGenerator> _generators;
         private Stack<Type> _circleDepend = new Stack<Type>();
         private FakerConfiguration _configuration = null;
-        public Faker(FakerConfiguration Config)
+        public FakerService(FakerConfiguration Config)
         {
             _generators = new Dictionary<Type, IValueGenerator>();  
             foreach (Type t in Assembly.GetExecutingAssembly().GetTypes())
             {
                 if (IsRequiredType(t, typeof(Generator<>)))
                 {
-                    if ((t.BaseType.GetGenericArguments().Count() > 0) && (t.Namespace == "Faker.Faker.Core"))
+                    if ((t.BaseType.GetGenericArguments().Count() > 0) && (t.Namespace == "Faker.Core"))
                         _generators.Add(t.BaseType.GetGenericArguments()[0], (IValueGenerator)Activator.CreateInstance(t));
                 }
             }
@@ -59,7 +59,7 @@ namespace Faker.Core
                 return GetDefaultValue(type);
             }
             _circleDepend.Push(type);
-            Faker faker = new Faker(_configuration);
+            FakerService faker = new FakerService(_configuration);
             int seed = (int)DateTime.Now.Ticks & 0x0000FFFF;
             GeneratorContext context = new GeneratorContext(new Random(seed), type, faker);
 
@@ -118,7 +118,7 @@ namespace Faker.Core
                         else
                         {
                             int seed = (int)DateTime.Now.Ticks & 0x0000FFFF;
-                            Faker faker = new Faker(_configuration);
+                            FakerService faker = new FakerService(_configuration);
                             GeneratorContext context = new GeneratorContext(new Random(seed), field.FieldType, faker);
                             IValueGenerator test = (IValueGenerator)Activator.CreateInstance(configurationRule.GeneratorName);
                             field.SetValue(obj, test.Generate(context));
@@ -146,7 +146,7 @@ namespace Faker.Core
                         else
                         {
                             int seed = (int)DateTime.Now.Ticks & 0x0000FFFF;
-                            Faker faker = new Faker(_configuration);
+                            FakerService faker = new FakerService(_configuration);
                             GeneratorContext context = new GeneratorContext(new Random(seed), property.PropertyType, faker);
                             IValueGenerator test = (IValueGenerator)Activator.CreateInstance(configurationRule.GeneratorName);
                             property.SetValue(obj, ((IValueGenerator)Activator.CreateInstance(configurationRule.GeneratorName)).Generate(context));
@@ -208,7 +208,7 @@ namespace Faker.Core
                     else
                     {
                         int seed = (int)DateTime.Now.Ticks & 0x0000FFFF;
-                        Faker faker = new Faker(_configuration);
+                        FakerService faker = new FakerService(_configuration);
                         GeneratorContext context = new GeneratorContext(new Random(seed), type, faker);
                         IValueGenerator test = (IValueGenerator)Activator.CreateInstance(configurationRule.GeneratorName);
                         parameters[i] = ((IValueGenerator)Activator.CreateInstance(configurationRule.GeneratorName)).Generate(context);
