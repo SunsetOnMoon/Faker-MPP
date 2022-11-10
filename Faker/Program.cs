@@ -26,7 +26,7 @@ namespace Test
         }
     }
 }
-namespace Facker
+namespace Facker.Example
 {
     using Test;
     class Program
